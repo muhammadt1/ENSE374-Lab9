@@ -1,0 +1,61 @@
+{"tasks":
+    [
+        {
+            "id": "1",
+            "text": "the unclaimed task",
+            "state": "unfinished",
+            "creator":"firstUser",
+            "isTaskClaimed": false,
+            "claimingUser":null,
+            "isTaskDone": false,
+            "isTaskCleared":false
+        },
+        {
+            "id": "2",
+            "text": "the task claimed by firstUser and unfinished",
+            "state": "unfinished",
+            "creator":"firstUser",
+            "isTaskClaimed": true,
+            "claimingUser":"firstUser",
+            "isTaskDone": false,
+            "isTaskCleared":false
+    
+        },
+        {
+            "id": "3",
+            "text": "the task claimed by secondUser and unfinished",
+            "state": "unfinished",
+            "creator":"firstUser",
+            "isTaskClaimed": true,
+            "claimingUser":"secondUser",
+            "isTaskDone": false,
+            "isTaskCleared":false
+    
+            
+        },
+        {
+            "id": "4",
+            "text": "the task claimed by firstUser and finished",
+            "state": "finished",
+            "creator":"firstUser",
+            "isTaskClaimed": true,
+            "claimingUser":"firstUser",
+            "isTaskDone": true,
+            "isTaskCleared":false
+    
+        },
+        {
+            "id": "5",
+            "text": "the task claimed by secondUser and finished",
+            "state": "finished",
+            "creator":"firstUser",
+            "isTaskClaimed": true,
+            "claimingUser":"secondUser",
+            "isTaskDone": true,
+            "isTaskCleared":false
+    
+        }
+    ]
+    
+}
+

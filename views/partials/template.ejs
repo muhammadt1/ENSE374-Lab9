@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE"">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lab8</title>
+</head>
+
+<body>
+<%for (let i = 0; i < item.length; i++) { %>
+    <% const uTask = item[i]; %>
+    <% if (uTask.isTaskClaimed === false) { %>
+        <form action="/claim" method="POST">
+            <div class="input-group mb-3">
+                <input type="hidden" name="id" value="<%= uTask.id %>">  
+                <input type="hidden" name="username" value="<%= username %>">
+                <input type="text" disabled class="form-control" placeholder='<%= uTask.text %>'>
+                <button class="btn btn-outline-secondary" type="submit" >Claim</button>
+            </div>
+        </form>
+    <% } %>
+    <% if (uTask.isTaskClaimed === true) { %>
+        <form action="/abandon" method="POST">
+            <div class="input-group mb-3">
+                <input type="hidden" name="userNum" value="<%= uTask.id %>">  
+                <input type="hidden" name="username" value="<%= username %>">
+                <div class="input-group-text">
+                    <input class="form-check-input mt-0" type="checkbox" aria-label="Checkbox for following text input">
+                </div>
+                <input type="text" disabled class="form-control border border-gray" placeholder='<%= uTask.text %>'>
+                <button type="button" class="btn btn-outline-secondary" >Abandon</button>
+            </div>
+        </form>
+        
+    <% } %>
+<% } %>
+</body>
+</html>
