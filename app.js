@@ -1,14 +1,67 @@
 const express = require("express");
 const fs = require("fs");
 const b = require("body-parser");
+// Bring in mongoose
+const mongoose = require( 'mongoose' );
+const session = require("express-session")
+const passport = require("passport")
+const passportLocalMongoose = require("passport-local-mongoose")
+require("dotenv").config();
 
 const app = express();
 
 const port = 3000;
 
+mongoose.connect( 'mongodb://localhost:27017/list', 
+                  { useNewUrlParser: true, useUnifiedTopology: true });
+
+
+
+
+//.model is for organization of data to RD's  
+
+//schema1
+const usersInfo = new mongoose.Schema ({
+    username: String,
+    password: String
+});
+
+//schema2
+const taskInfo = new mongoose.Schema({
+   text: String,
+   state: String,
+   creator: String,
+   isTaskClaimed: Boolean,
+   claimingUser: String,
+   isTaskDone: Boolean,
+   isTaskCleared: Boolean
+})
+
+
+const u = mongoose.model ("u",usersInfo);
+const t = mongoose.model ("t",taskInfo);
+
+
+
+usersInfo.plugin(passportLocalMongoose);
+passport.use(u.serializeUser());
+
+
+
+
 app.listen(port, () => {
     console.log(`Server is running on http://localhost:${port}`);
 });
+
+
+app.use(session({
+    secret: process.env.SECRET,
+    resave: false,
+    saveUninitialized: false
+}));
+
+app.use (passport.initialize());
+app.use (passport.session());
 
 app.set("view engine", "ejs");
 app.use(express.static("public"));
@@ -44,6 +97,7 @@ app.post("/login", (req, res) => {
             console.log("The Email user entered is:", eInp);
             console.log("The Password user entered is:", pInp);
 
+            // Check if there is a user with the entered credentials
             let validUser = false;
 
             for (const user of users) {
@@ -52,6 +106,8 @@ app.post("/login", (req, res) => {
                     break;
                 }
             }
+
+            // Inside the /login route
             if (validUser) 
             {
                 let tk = jsonInf("tasks.json");
@@ -210,3 +266,81 @@ app.post("/purge", (req, res) => {
     res.redirect("/list");
 });
 
+/*MONGOOSE SCHEMAS FOR USERS AND TASKS*/ 
+const firstUser = new u({
+    username: "muhammad.etariq@gmail.com",
+    password: "testpassword"
+})
+
+const secondUser = new u ({
+    username: "user2@gmail.com",
+    password: "testpassword2"
+})
+
+
+
+
+
+const taskOne = new t({
+    id: 1,
+    text: "the unclaimed task",
+    state: "unfinished",
+    creator:"firstUser",
+    isTaskClaimed: false,
+    claimingUser:null,
+    isTaskDone: false,
+    isTaskCleared:false
+})
+const taskTwo = new t({
+    id: 2,
+    text: "the task claimed by firstUser and unfinished",
+    state: "unfinished",
+    creator:"firstUser",
+    isTaskClaimed: true,
+    claimingUser:"firstUser",
+    isTaskDone: false,
+    isTaskCleared:false
+})
+
+const taskThree = new t({
+    id: 3,
+    text: "the task claimed by secondUser and unfinished",
+    state: "unfinished",
+    creator:"firstUser",
+    isTaskClaimed: true,
+    claimingUser:"secondUser",
+    isTaskDone: false,
+    isTaskCleared:false
+})
+
+const taskFour = new t({
+    id: 4,
+    text: "the task claimed by firstUser and finished",
+    state: "finished",
+    creator:"firstUser",
+    isTaskClaimed: true,
+    claimingUser:"firstUser",
+    isTaskDone: true,
+    isTaskCleared:false
+})
+
+const taskFive = new t({
+    id: 5,
+    text: "the task claimed by secondUser and finished",
+    state: "finished",
+    creator:"firstUser",
+    isTaskClaimed: true,
+    claimingUser:"secondUser",
+    isTaskDone: true,
+    isTaskCleared:false
+})
+
+
+firstUser.save();
+secondUser.save()
+
+taskOne.save();
+taskTwo.save();
+taskThree.save();
+taskFour.save();
+taskFive.save();
